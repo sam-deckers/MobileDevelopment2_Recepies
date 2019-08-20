@@ -1,7 +1,9 @@
 package com.sampxl.recipeapp;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +17,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class OptionsFragment extends Fragment {
+    private SQLiteDatabase mDatabase;
     private Button saveButton;
     private Switch switch1;
+    private String mValue;
 
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String SWITCH1 = "switch1";
@@ -29,6 +33,9 @@ public class OptionsFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_options, container, false);
         saveButton = view.findViewById(R.id.save_button);
         switch1 = view.findViewById(R.id.switch1);
+
+        PreferenceDBHelper dbHelper = new PreferenceDBHelper(getActivity());
+        mDatabase = dbHelper.getWritableDatabase();
 
         saveButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -52,6 +59,14 @@ public class OptionsFragment extends Fragment {
         editor.apply();
 
         Toast.makeText(getActivity(), "Changes Applied", Toast.LENGTH_SHORT).show();
+
+        ContentValues cv = new ContentValues();
+        cv.put(PreferenceContract.PreferenceEntry.COLUMN_NAME, "value");
+        cv.put(PreferenceContract.PreferenceEntry.COLUMN_VALUE, String.valueOf(switch1.isChecked()));
+
+        mDatabase.insert(PreferenceContract.PreferenceEntry.TABLE_NAME, null, cv);
+
+
     }
 
     public void loadData(){

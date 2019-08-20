@@ -43,11 +43,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         RecipeItem currentItem = mRecipeList.get(position);
 
         String imageUrl = currentItem.getImageUrl();
-        String creatorName = currentItem.getCreator();
-        int likeCount = currentItem.getLikeCount();
+        String creatorName = currentItem.getName();
+        String likeCount = currentItem.getSteps();
 
         holder.mTextViewCreator.setText(creatorName);
-        holder.mTextViewLikes.setText("Likes: " + likeCount);
+        holder.mTextViewLikes.setText(likeCount);
         Picasso.with(mContext).load(imageUrl).fit().centerInside().into(holder.mImageView);
     }
 

@@ -20,9 +20,9 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String imageUrl = intent.getStringExtra("imageUrl");
         Log.d("imageUrl", imageUrl);
-        String creatorName = intent.getStringExtra("creatorName");
+        String creatorName = intent.getStringExtra("name");
         Log.d("creatorName", creatorName);
-        int likeCount = intent.getIntExtra("likeCount", 0);
+        String likeCount = intent.getStringExtra("steps");
         Log.d("likeCount", String.valueOf(likeCount));
 
         ImageView imageView = findViewById(R.id.image_view_detail);
@@ -31,7 +31,7 @@ public class DetailActivity extends AppCompatActivity {
 
         Picasso.with(this).load(imageUrl).fit().centerInside().into(imageView);
         textViewCreator.setText(creatorName);
-        textViewLikes.setText("Likes " + likeCount);
+        textViewLikes.setText(likeCount);
     }
 
 

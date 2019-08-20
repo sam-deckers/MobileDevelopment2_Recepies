@@ -72,7 +72,7 @@ public class RecipesFragment extends Fragment implements RecipeAdapter.OnItemCli
 
 
     private void parseJSON() {
-        String url = "https://pixabay.com/api/?key=5303976-fd6581ad4ac165d1b75cc15b3&q=kitten&image_type=photo&pretty=true";
+        String url = "https://api.myjson.com/bins/15kgvf";
 
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -80,16 +80,18 @@ public class RecipesFragment extends Fragment implements RecipeAdapter.OnItemCli
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONArray jsonArray = response.getJSONArray("hits");
+                            JSONArray jsonArray = response.getJSONArray("recipes");
 
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject hit = jsonArray.getJSONObject(i);
                                 Log.d("amount", String.valueOf(i));
-                                String creatorName = hit.getString("user");
-                                String imageUrl = hit.getString("webformatURL");
-                                int likeCount = hit.getInt("likes");
+                                String name = hit.getString("name");
+                                String imageUrl = hit.getString("imageUrl");
+                                String steps = hit.getString("steps");
 
-                                mRecipeList.add(new RecipeItem(imageUrl, creatorName, likeCount));
+                                Log.d("new recipe", name + " "  + steps + " " + imageUrl);
+
+                                mRecipeList.add(new RecipeItem(imageUrl, name, steps));
                             }
 
                             mRecipeAdapter = new RecipeAdapter(getActivity(), mRecipeList);
@@ -117,19 +119,19 @@ public class RecipesFragment extends Fragment implements RecipeAdapter.OnItemCli
         RecipeItem clickedItem = mRecipeList.get(position);
 
         detailIntent.putExtra("imageUrl", clickedItem.getImageUrl());
-        detailIntent.putExtra("creatorName", clickedItem.getCreator());
-        detailIntent.putExtra("likeCount", clickedItem.getLikeCount());
+        detailIntent.putExtra("name", clickedItem.getName());
+        detailIntent.putExtra("steps", clickedItem.getSteps());
 
         startActivity(detailIntent);
     }
     else{
         RecipeItem clickedItem = mRecipeList.get(position);
         ImageView imageUrl =  getActivity().findViewById(R.id.image_view_detail);
-        TextView creatorName =  getActivity().findViewById(R.id.text_view_creator_detail);
-        TextView likeCount =  getActivity().findViewById(R.id.text_view_like_detail);
+        TextView name =  getActivity().findViewById(R.id.text_view_creator_detail);
+        TextView steps =  getActivity().findViewById(R.id.text_view_like_detail);
         Picasso.with(getActivity()).load(clickedItem.getImageUrl()).fit().centerInside().into(imageUrl);
-        creatorName.setText(clickedItem.getCreator());
-        likeCount.setText("Likes " + clickedItem.getLikeCount());
+        name.setText(clickedItem.getName());
+        steps.setText(clickedItem.getSteps());
 
     }
 
