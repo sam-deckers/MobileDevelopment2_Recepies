@@ -6,10 +6,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +48,7 @@ public class RecipesFragment extends Fragment implements RecipeAdapter.OnItemCli
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recipes, container, false);
+        View view = inflater.inflate(R.layout.activity_recipes, container, false);
         return view;
     }
 
@@ -108,6 +112,7 @@ public class RecipesFragment extends Fragment implements RecipeAdapter.OnItemCli
 
     @Override
     public void onItemClick(int position) {
+    if(getActivity().findViewById(R.id.image_view_detail) == null){
         Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
         RecipeItem clickedItem = mRecipeList.get(position);
 
@@ -116,5 +121,17 @@ public class RecipesFragment extends Fragment implements RecipeAdapter.OnItemCli
         detailIntent.putExtra("likeCount", clickedItem.getLikeCount());
 
         startActivity(detailIntent);
+    }
+    else{
+        RecipeItem clickedItem = mRecipeList.get(position);
+        ImageView imageUrl =  getActivity().findViewById(R.id.image_view_detail);
+        TextView creatorName =  getActivity().findViewById(R.id.text_view_creator_detail);
+        TextView likeCount =  getActivity().findViewById(R.id.text_view_like_detail);
+        Picasso.with(getActivity()).load(clickedItem.getImageUrl()).fit().centerInside().into(imageUrl);
+        creatorName.setText(clickedItem.getCreator());
+        likeCount.setText("Likes " + clickedItem.getLikeCount());
+
+    }
+
     }
 }
